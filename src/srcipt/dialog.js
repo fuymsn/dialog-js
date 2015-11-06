@@ -8,6 +8,34 @@
 }(function($) {
     'use strict';
 
+    /**
+     * 将dialog居中
+     * @param  {[type]} ins [传入dialog this对象]
+     * @return {[type]}     [null]
+     */
+    var _center = function(ins){
+        var d = ins.$dialog;
+        var $window = $(window);
+        var $document = $(document);
+        var fixed = ins.options.fixed;
+        var dl = fixed ? 0 : $document.scrollLeft();
+        var dt = fixed ? 0 : $document.scrollTop();
+        var ww = $window.width();
+        var wh = $window.height();
+        var ow = d.width();
+        var oh = d.height();
+        var left = (ww - ow) / 2 + dl;
+        var top = (wh - oh) * 382 / 1000 + dt;// 黄金比例
+        var style = d[0].style;
+
+        style.left = Math.max(parseInt(left), dl) + 'px';
+        style.top = Math.max(parseInt(top), dt) + 'px';
+    }
+
+    /**
+     * [Dialog]
+     * @param {[type]} options [传入dialog属性]
+     */
     var Dialog = function(options){
         this.title;
         this.content;
@@ -20,14 +48,15 @@
         this.$closeBtn;
         this.$buttonBox;
         this.button;
-        this.buttonTarget;
-        this.ok;
-        this.okValue;
-        this.cancel;
-        this.cancelValue;
+
+        //用户点击的触发按钮
         this.cancelDisplay;
+
+        //初始化参数
         this.options;
         this.originalOptions;
+
+        //初始化dialog
         this.init(options);
     }
 
@@ -59,37 +88,21 @@
     }
 
     $.extend(Dialog.prototype, {
-        _center : function(){
 
-            var d = this.$dialog;
-            var $window = $(window);
-            var $document = $(document);
-            var fixed = this.options.fixed;
-            var dl = fixed ? 0 : $document.scrollLeft();
-            var dt = fixed ? 0 : $document.scrollTop();
-            var ww = $window.width();
-            var wh = $window.height();
-            var ow = d.width();
-            var oh = d.height();
-            var left = (ww - ow) / 2 + dl;
-            var top = (wh - oh) * 382 / 1000 + dt;// 黄金比例
-            var style = d[0].style;
-
-            style.left = Math.max(parseInt(left), dl) + 'px';
-            style.top = Math.max(parseInt(top), dt) + 'px';
-        }
-    });
-
-    $.extend(Dialog.prototype, {
+        //初始化dialog
         init: function(options){
 
+            //初始化后，this.x 会以特权方法的形式挂载在对象上
+            //获取options
             this.options = this.getOptions(options);
             this.originalOptions = this.options;
 
+            //生成模板
             var tmp = Utility.template(wrapperHTML, this.options),
                 id = this.options.id,
                 that = this;
 
+            //生成节点
             this.$main = $(tmp);
             this.$closeBtn = this.$main.find(".d-close");
             this.$dialog = this.$main.siblings(".d-dialog");
@@ -145,6 +158,16 @@
                 });
             }
 
+            //原this.options.onshow中的this只存在于this.options中的值
+            //将this中的方法挂载到 this options上
+            this.options = $.extend({}, this, this.options);
+
+            // 显示的时候触发
+            if (this.options.onshow) {
+                //this.options = this;
+                this.options.onshow();
+            };
+
             this.button(options.button);
 
             if (!options.button.length) {
@@ -166,21 +189,21 @@
         //show
         show: function(data){
 
+            //解析target传参
             if (data && data.target) {
-                this.buttonTarget = data.target;
+                this.options.buttonTarget = data.target;
             };
             
             this.create();
             $("body").append(this.$main);
-            this._center();
+
+            //居中
+            _center(this);
+            //显示
             this.$dialog.show();
             this.$shadow.show();
 
-            if (this.options.onshow) {
-                this.options.onshow(data);
-            };
-
-            //focus control
+            //焦点控制
             //若不控制焦点，enter回车键会触发dialog弹出按钮，而出现第二次弹窗
             //并且完成焦点控制后，当窗口弹出，用户可以直接输入内容
             var $inputArr = this.$dialog.find("input, textarea, select").not("input[type='button']"),
@@ -191,6 +214,7 @@
                  $inputArr.length ? $inputArr[0].focus() : ($buttonArr[0] && $buttonArr[0].focus());
             }, 0);
 
+            //返回本身
             return this;
         },
 
@@ -205,6 +229,7 @@
             this.$main.remove();
             delete $.dialog.list[this.id];
 
+            //移除后触发的事件
             if (this.options.onremove) {
                 this.options.onremove();
             };
@@ -278,15 +303,6 @@
 
         },
 
-        //button
-        ok: function(){
-
-        },
-
-        cancel: function(){
-
-        },
-
         // 触发按钮回调函数
         _trigger: function (id) {
             var fn = this.callbacks[id];
@@ -297,44 +313,42 @@
     });
     
     //event
-    $.extend(Dialog.prototype, {
-        onshow: function(){
+    // $.extend(Dialog.prototype, {
 
-        },
+    //     onclose: function(){
 
-        onclose: function(){
+    //     },
 
-        },
+    //     onfocus: function(){
 
-        onfocus: function(){
+    //     },
 
-        },
+    //     onbeforeremove: function(){
 
-        onbeforeremove: function(){
+    //     },
 
-        },
+    //     onremove: function(){
 
-        onremove: function(){
+    //     },
 
-        },
+    //     onblur: function(){
 
-        onblur: function(){
+    //     }
 
-        }
-
-    });
-
+    // });
+    
+    //将dialog的实例挂载到$上
     $.dialog = function(options){
         var id = Dialog.DEFAULTS.id;
         if (options.id) { id = options.id };
         return $.dialog.list[id] = new Dialog(options);
     }
 
+    //通过get获取dialog
     $.dialog.list = {};
     $.dialog.get = function(id){
         return id === undefined ? $.dialog.list : $.dialog.list[id];
     };
-
 
     //extend
     $.tips = function(c, callback){
