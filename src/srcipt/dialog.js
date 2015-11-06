@@ -159,14 +159,8 @@
             }
 
             //原this.options.onshow中的this只存在于this.options中的值
-            //将this中的方法挂载到 this options上
+            //将this中的方法挂载到 this options上，以便onshow方法调用
             this.options = $.extend({}, this, this.options);
-
-            // 显示的时候触发
-            if (this.options.onshow) {
-                //this.options = this;
-                this.options.onshow();
-            };
 
             this.button(options.button);
 
@@ -202,6 +196,12 @@
             //显示
             this.$dialog.show();
             this.$shadow.show();
+
+            // 显示的时候触发
+            if (this.options.onshow) {
+                //this.options = this;
+                this.options.onshow();
+            };
 
             //焦点控制
             //若不控制焦点，enter回车键会触发dialog弹出按钮，而出现第二次弹窗
