@@ -37,24 +37,19 @@
      * @param {[type]} options [传入dialog属性]
      */
     var Dialog = function(options){
-        this.title;
-        this.content;
-        this.width;
-        this.height;
-        this.fixed;
         this.$main;
         this.$dialog;
         this.$shadow;
         this.$closeBtn;
         this.$buttonBox;
-        this.button;
-
-        //用户点击的触发按钮
-        this.cancelDisplay;
 
         //初始化参数
         this.options;
         this.originalOptions;
+        this.buttonTarget;
+
+        //初始化方法
+        this.onshow;
 
         //初始化dialog
         this.init(options);
@@ -82,8 +77,17 @@
         height: "auto",
         okValue: "确定",
         cancelValue: "取消",
+
+        //用户点击的触发按钮
         cancelDisplay: true,
+
+        //定义目标点击按钮
+        buttonTarget: null,
+
+        //是否固定
         fixed: true,
+
+        //是否聚焦
         autofocus: true
     }
 
@@ -109,6 +113,7 @@
             this.$shadow = this.$main.siblings(".d-shadow");
             this.$buttonBox = this.$main.find(".d-bottom");
 
+            //设置dialog ID
             this.$dialog.attr("id", id);
 
             //this.$main.width(this.options.width);
@@ -129,42 +134,37 @@
             // button handle
             this.options = this.getOptions(this.originalOptions);
 
-            var options = this.options;
-            if (!$.isArray(options.button)) {
-                options.button = [];
+            if (!$.isArray(this.options.button)) {
+                this.options.button = [];
             }
             // title设置
-            if (!options.title) {
+            if (!this.options.title) {
                 this.$main.find(".d-title").remove();
             };
 
             // 确定按钮
-            if (options.ok) {
-                options.button.push({
+            if (this.options.ok) {
+                this.options.button.push({
                     id: 'ok',
-                    value: options.okValue,
-                    callback: options.ok,
+                    value: this.options.okValue,
+                    callback: this.options.ok,
                     autofocus: true
                 });
             }
 
             // 取消按钮
-            if (options.cancel) {
-                options.button.push({
+            if (this.options.cancel) {
+                this.options.button.push({
                     id: 'cancel',
-                    value: options.cancelValue,
-                    callback: options.cancel,
-                    display: options.cancelDisplay
+                    value: this.options.cancelValue,
+                    callback: this.options.cancel,
+                    display: this.options.cancelDisplay
                 });
             }
 
-            //原this.options.onshow中的this只存在于this.options中的值
-            //将this中的方法挂载到 this options上，以便onshow方法调用
-            this.options = $.extend({}, this, this.options);
+            this.setButton(this.options.button);
 
-            this.button(options.button);
-
-            if (!options.button.length) {
+            if (!this.options.button.length) {
                 this.$main.find(".d-bottom").remove();
             };
 
@@ -181,13 +181,8 @@
         },
 
         //show
-        show: function(data){
+        show: function(){
 
-            //解析target传参
-            if (data && data.target) {
-                this.options.buttonTarget = data.target;
-            };
-            
             this.create();
             $("body").append(this.$main);
 
@@ -199,8 +194,16 @@
 
             // 显示的时候触发
             if (this.options.onshow) {
-                //this.options = this;
-                this.options.onshow();
+                //解法1
+                //原this.options.onshow中的this只存在于this.options中的值
+                //将this中的方法挂载到 this options上，以便onshow方法调用
+                // this.options = $.extend({}, this, this.options);
+                // 这种方式不对。。。
+
+                //解法2
+                //这样做得好处是可以更好的让开发者理解onshow方法里面所调用的this
+                this.onshow = this.options.onshow;
+                this.onshow();
             };
 
             //焦点控制
@@ -238,7 +241,7 @@
         },
 
         //button定义，arg
-        button: function(args){
+        setButton: function(args){
             args = args || [];
             var that = this;
             var html = '';
@@ -292,6 +295,11 @@
 
         setTitle: function(str){
             this.$main.find(".d-title").text(str);
+            return this;
+        },
+
+        setBtnTarget: function($target){
+            this.buttonTarget = $target;
             return this;
         },
 
