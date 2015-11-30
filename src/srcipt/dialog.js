@@ -180,6 +180,11 @@
             return $.extend(true, {}, this.getDefaults(), options);
         },
 
+        //向dialog传值
+        setData: function(data){
+            this.data = data;
+            return this;
+        },
         //show
         show: function(){
 
@@ -320,31 +325,6 @@
         }
     });
     
-    //event
-    // $.extend(Dialog.prototype, {
-
-    //     onclose: function(){
-
-    //     },
-
-    //     onfocus: function(){
-
-    //     },
-
-    //     onbeforeremove: function(){
-
-    //     },
-
-    //     onremove: function(){
-
-    //     },
-
-    //     onblur: function(){
-
-    //     }
-
-    // });
-    
     //将dialog的实例挂载到$上
     $.dialog = function(options){
         var id = Dialog.DEFAULTS.id;
@@ -372,6 +352,5 @@
 
         tip.show();
     }
-
 
 }));
