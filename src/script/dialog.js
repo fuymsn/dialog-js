@@ -13,23 +13,61 @@
      * @param  {[type]} ins [传入dialog this对象]
      * @return {[type]}     [null]
      */
-    var _center = function(ins){
+    var _fixCenter = function(ins){
         var d = ins.$dialog;
         var $window = $(window);
-        var $document = $(document);
-        var fixed = ins.options.fixed;
-        var dl = fixed ? 0 : $document.scrollLeft();
-        var dt = fixed ? 0 : $document.scrollTop();
+        var dl = 0;
+        var dt = 0;
         var ww = $window.width();
         var wh = $window.height();
         var ow = d.width();
         var oh = d.height();
         var left = (ww - ow) / 2 + dl;
-        var top = (wh - oh) * 382 / 1000 + dt;// 黄金比例
+        var top = (wh - oh) * 382 / 1000 + dt; //黄金比例
         var style = d[0].style;
 
         style.left = Math.max(parseInt(left), dl) + 'px';
         style.top = Math.max(parseInt(top), dt) + 'px';
+    }
+    
+    var _autoCenter = function(ins){
+        var d = ins.$dialog;
+        var ow = d.width();
+        var oh = d.height();
+        var style = d[0].style;
+
+        style.left = "50%";
+        style.marginLeft = "-" + ow/2 + "px";
+        style.top = "38%"; //黄金比例
+        style.marginTop = "-" + oh/2 + "px";
+    }
+    
+    /**
+     * 简易模板生成
+     * @param src:字符串模板, options: 要替换的key value
+     */
+    var _template = function(src, options, ori){
+
+        var curStr;
+        //$.support为特征检测，checkOn IE返回false
+        if(!$.support.checkOn){
+            curStr = src;
+        }else{
+            curStr = [];
+            var len = src.length;
+            var i;
+            for(i=0; i<len; i++){
+                curStr.push(src[i]);
+            }
+            curStr = curStr.join("");
+        }
+
+        var formatReg = new RegExp("#{([a-z0-9_]+)}", "ig");
+        curStr = curStr.replace(formatReg, function(match, f1, index, srcStr){
+            return options[f1]?options[f1]:(ori?match:"");
+        });
+        return curStr;
+
     }
 
     /**
@@ -85,7 +123,7 @@
         buttonTarget: null,
 
         //是否固定
-        fixed: true,
+        fixed: false,
 
         //是否聚焦
         autofocus: true
@@ -102,7 +140,7 @@
             this.originalOptions = this.options;
 
             //生成模板
-            var tmp = Utility.template(wrapperHTML, this.options),
+            var tmp = _template(wrapperHTML, this.options),
                 id = this.options.id,
                 that = this;
 
@@ -192,7 +230,12 @@
             $("body").append(this.$main);
 
             //居中
-            _center(this);
+            if(this.options.fixed){
+                _fixCenter(this);
+            }else{
+                _autoCenter(this);
+            }
+            
             //显示
             this.$dialog.show();
             this.$shadow.show();

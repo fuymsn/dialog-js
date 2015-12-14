@@ -5,10 +5,30 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>dialog.js</title>
-	<link rel="stylesheet" type="text/css" href="src/style/reset.css">
-	<script type="text/javascript" src="src/script/dialog.js"></script>
+	<link rel="stylesheet" type="text/css" href="./build/reset.min.css">
+	<link rel="stylesheet" type="text/css" href="./build/dialog.min.css">
+	
+	<script type="text/javascript" src="./src/vendor/jquery-2.1.4.js"></script>
+	<script type="text/javascript" src="./src/script/dialog.js"></script>
 </head>
 <body>
+	<button id="btn">弹窗</button>
 	
+	<script>
+		$(function(){
+			
+			$("#btn").on("click", function(){
+				var a = $.dialog({
+					title: "Dialog标题",
+					content: "Young的Dialog<button>按钮</button>"
+				});	
+				
+				a.show();
+			});
+			
+		});
+		
+		
+	</script>
 </body>
 </html>
