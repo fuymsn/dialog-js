@@ -15,11 +15,27 @@ module.exports = function(grunt) {
         }
       }
 
+    },
+    
+    watch: {
+      options: {
+        livereload: true,
+      },
+      css: {
+        files: ['src/style/*.less', 'src/style/*.css'],
+        tasks: ['less'],
+      },
     }
+    
   });
-
+  
+  grunt.event.on('watch', function(action, filepath, target) {
+    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+  });
+  
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
   grunt.registerTask('default', ['less']);

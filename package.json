@@ -21,6 +21,7 @@
   "homepage": "https://github.com/fuymsn/dialog-js#readme",
   "dependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-less": "^1.1.0"
+    "grunt-contrib-less": "^1.1.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
