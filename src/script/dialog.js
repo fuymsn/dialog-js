@@ -9,7 +9,7 @@
     'use strict';
 
     /**
-     * 将dialog居中
+     * 将固定dialog居中
      * @param  {[type]} ins [传入dialog this对象]
      * @return {[type]}     [null]
      */
@@ -30,16 +30,28 @@
         style.top = Math.max(parseInt(top), dt) + 'px';
     }
     
+    /**
+     * 将自动dialog居中，并根据浏览器拉伸自动定位
+     * @param  {[type]} ins [传入dialog this对象]
+     * @return {[type]}     [null]
+     */
     var _autoCenter = function(ins){
+        
+        //dialog
         var d = ins.$dialog;
+        
+        //dialog的长宽
         var ow = d.width();
         var oh = d.height();
+        
+        //dialog的style
         var style = d[0].style;
 
         style.left = "50%";
         style.marginLeft = "-" + ow/2 + "px";
         style.top = "38%"; //黄金比例
         style.marginTop = "-" + oh/2 + "px";
+    
     }
     
     /**
