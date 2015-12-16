@@ -10,27 +10,32 @@ module.exports = function(grunt) {
           
         },
         files: {
-          "build/reset.min.css": "src/style/reset.css",
           "build/dialog.min.css": "src/style/dialog.less"
         }
+      },
+      
+      common:{
+        options: {
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+          
+        },
+        files: {
+          "build/reset.min.css": "src/style/reset.css",
+        }
       }
-
     },
     
     watch: {
       options: {
-        livereload: true,
+        spawn: true,
       },
+      
       css: {
         files: ['src/style/*.less', 'src/style/*.css'],
-        tasks: ['less'],
+        tasks: ['less']
       },
     }
     
-  });
-  
-  grunt.event.on('watch', function(action, filepath, target) {
-    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
   
   // Load the plugin that provides the "uglify" task.
