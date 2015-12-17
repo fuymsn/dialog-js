@@ -5,6 +5,7 @@
  * mail: mr.f.young@gmail.com
  */
 
+@imgPath: "http://www.baidu.com/images/";
 /* dialog */
 .d-shadow{
 	position: fixed;
@@ -29,7 +30,7 @@
 	border: 1px solid #ccc;
 	border-radius: 6px;
 	.d-close{
-		background-image: url(../src/image/dialog.png);
+		background-image: url("@{imgPath}dialog.png");
 		height: 18px;
 		width: 18px;
 		position: absolute;
@@ -39,6 +40,8 @@
 		z-index: 20;
 	}
 }
+
+
 
 /* dialog main */
 .d-main{
@@ -75,6 +78,7 @@
 				float: right;
 			}
 		}
+		
 	}
 	.d-bottom{
 		padding: 0px 30px 30px 30px;
@@ -87,4 +91,3 @@
 		}
 	}
 }
-

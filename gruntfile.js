@@ -6,21 +6,28 @@ module.exports = function(grunt) {
     less: {
       build:{
         options: {
+          compress: false,
           banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
           
-        },
-        files: {
-          "build/dialog.min.css": "src/style/dialog.less"
-        }
-      },
-      
-      common:{
-        options: {
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+          //配置插件
+          plugins: [
+            
+            new (require('less-plugin-autoprefix'))({
+              browsers: ["last 2 versions"]
+            })
+            
+          ],
+          
+          //替换变量
+          modifyVars: {
+            //imgPath: '"http://mycdn.com/path/to/images/"'
+            imgPath: '"../src/image/"'
+          }
           
         },
+        
         files: {
-          "build/reset.min.css": "src/style/reset.css",
+          "build/dialog.min.css": ["src/style/reset.css","src/style/dialog.less"]
         }
       }
     },
