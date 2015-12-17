@@ -12,6 +12,7 @@ module.exports = function(grunt) {
           //配置插件
           plugins: [
             
+            //浏览器兼容性处理，自动添加-webkit等前缀
             new (require('less-plugin-autoprefix'))({
               browsers: ["last 2 versions"]
             })
