@@ -49,7 +49,7 @@
 
         style.left = "50%";
         style.marginLeft = "-" + ow/2 + "px";
-        style.top = "38%"; //黄金比例
+        style.top = "50%"; //黄金比例
         style.marginTop = "-" + oh/2 + "px";
     
     }
@@ -241,17 +241,6 @@
             this.create();
             $("body").append(this.$main);
 
-            //居中
-            if(this.options.fixed){
-                _fixCenter(this);
-            }else{
-                _autoCenter(this);
-            }
-            
-            //显示
-            this.$dialog.show();
-            this.$shadow.show();
-
             // 显示的时候触发
             if (this.options.onshow) {
                 //解法1
@@ -265,6 +254,19 @@
                 this.onshow = this.options.onshow;
                 this.onshow();
             };
+
+            //居中
+            //fix on June 21, 2016
+            //必须在执行onshow以后才进行居中，否则当dialog内部高度变化时，居中无法完成
+            if(this.options.fixed){
+                _fixCenter(this);
+            }else{
+                _autoCenter(this);
+            }
+            
+            //显示
+            this.$dialog.show();
+            this.$shadow.show();
 
             //焦点控制
             //若不控制焦点，enter回车键会触发dialog弹出按钮，而出现第二次弹窗

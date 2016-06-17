@@ -19,7 +19,11 @@
 			$("#btn").on("click", function(){
 				var a = $.dialog({
 					title: "Dialog标题",
-					content: "Young的Dialog<button>按钮</button>"
+					fixed: false,
+					content: "Young的Dialog<button>按钮</button><div class='dialog-a'></div>",
+					onshow: function(){
+						$(".dialog-a").height("300px");
+					}
 				});	
 				
 				a.show();
