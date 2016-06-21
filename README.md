@@ -7,3 +7,4 @@ dialog-js is a simple and easy dialog.
 * 2015-11-08 v0.1.2 update **onshow**, **buttonTarget** object
 * 2015-11-14 v0.1.3 update update delete action button & move some function into dialog instance
 * 2015-12-15 v0.1.4 update dialog fixed config & add autofix function 
+* 2015-12-15 v0.1.5 fix bug: dialog can not show the right top position, cause by changeable inner elements of 'content'
