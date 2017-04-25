@@ -29,21 +29,21 @@
         style.left = Math.max(parseInt(left), dl) + 'px';
         style.top = Math.max(parseInt(top), dt) + 'px';
     }
-    
+
     /**
      * 将自动dialog居中，并根据浏览器拉伸自动定位
      * @param  {[type]} ins [传入dialog this对象]
      * @return {[type]}     [null]
      */
     var _autoCenter = function(ins){
-        
+
         //dialog
         var d = ins.$dialog;
-        
+
         //dialog的长宽
         var ow = d.width();
         var oh = d.height();
-        
+
         //dialog的style
         var style = d[0].style;
 
@@ -51,9 +51,9 @@
         style.marginLeft = "-" + ow/2 + "px";
         style.top = "50%"; //黄金比例
         style.marginTop = "-" + oh/2 + "px";
-    
+
     }
-    
+
     /**
      * 简易模板生成
      * @param src:字符串模板, options: 要替换的key value
@@ -109,15 +109,15 @@
     var count = 0;
     var wrapperHTML = ['<div class="d-dialog">',
         '<div class="d-wrapper">',
-            '<div class="d-close"></div>',
-            '<div class="d-main">',
-                '<div class="d-title">#{title}</div>',
-                '<div class="d-content">#{content}</div>',
-                '<div class="d-bottom"></div>',
-            '</div>',
+        '<div class="d-close"></div>',
+        '<div class="d-main">',
+        '<div class="d-title">#{title}</div>',
+        '<div class="d-content">#{content}</div>',
+        '<div class="d-bottom"></div>',
         '</div>',
-    '</div>',
-    '<div class="d-shadow"></div>'].join("");
+        '</div>',
+        '</div>',
+        '<div class="d-shadow"></div>'].join("");
 
     Dialog.DEFAULTS = {
         id: (new Date() - 0) + count,
@@ -127,6 +127,7 @@
         height: "auto",
         okValue: "确定",
         cancelValue: "取消",
+        closeButtonDisplay: true,
 
         //用户点击的触发按钮
         cancelDisplay: true,
@@ -171,7 +172,7 @@
 
             //bind close btn
             $(document).on("click", ".d-close", function(e){
-                
+
                 that.remove();
 
                 e.stopPropagation();
@@ -210,6 +211,13 @@
                     callback: this.options.cancel,
                     display: this.options.cancelDisplay
                 });
+            }
+
+            //删除按钮
+            if (this.options.closeButtonDisplay){
+                this.$closeBtn.show();
+            }else{
+                this.$closeBtn.hide();
             }
 
             this.setButton(this.options.button);
@@ -263,7 +271,7 @@
             }else{
                 _autoCenter(this);
             }
-            
+
             //显示
             this.$dialog.show();
             this.$shadow.show();
@@ -276,7 +284,7 @@
 
             //先判断是否有表单，先聚焦表单
             setTimeout(function(){
-                 $inputArr.length ? $inputArr[0].focus() : ($buttonArr[0] && $buttonArr[0].focus());
+                $inputArr.length ? $inputArr[0].focus() : ($buttonArr[0] && $buttonArr[0].focus());
             }, 0);
 
             //返回本身
@@ -309,7 +317,7 @@
             var html = '';
             var number = 0;
             this.callbacks = {};
-            
+
             if (typeof args === 'string') {
                 html = args;
                 number ++;
@@ -327,26 +335,26 @@
                     }
 
                     html +=
-                      '<button'
-                    + ' type="button"'
-                    + ' class="btn"'
-                    + ' i-id="' + id + '"'
-                    + style
-                    + (val.disabled ? ' disabled' : '')
-                    + (val.autofocus ? ' autofocus class="ui-dialog-autofocus"' : '')
-                    + '>'
-                    + val.value
-                    + '</button>';
+                        '<button'
+                        + ' type="button"'
+                        + ' class="btn"'
+                        + ' i-id="' + id + '"'
+                        + style
+                        + (val.disabled ? ' disabled' : '')
+                        + (val.autofocus ? ' autofocus class="ui-dialog-autofocus"' : '')
+                        + '>'
+                        + val.value
+                        + '</button>';
 
                     that.$buttonBox
-                    .on('click', '[i-id=' + id +']', function (e) {                
-                        var $this = $(this);
-                        if (!$this.attr('disabled')) {
-                            // IE BUG
-                            that._trigger(id);
-                        }
-                        e.preventDefault();
-                    });
+                        .on('click', '[i-id=' + id +']', function (e) {
+                            var $this = $(this);
+                            if (!$this.attr('disabled')) {
+                                // IE BUG
+                                that._trigger(id);
+                            }
+                            e.preventDefault();
+                        });
 
                 });
             }
@@ -376,12 +384,12 @@
         // 触发按钮回调函数
         _trigger: function (id) {
             var fn = this.callbacks[id];
-                
+
             return typeof fn !== 'function' || fn.call(this) !== false ?
                 this.close().remove() : this;
         }
     });
-    
+
     //将dialog的实例挂载到$上
     $.dialog = function(options){
         var id = Dialog.DEFAULTS.id;
