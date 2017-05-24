@@ -127,9 +127,11 @@
         height: "auto",
         okValue: "确定",
         cancelValue: "取消",
+        
+        //是否显示dialog关闭按钮
         closeButtonDisplay: true,
 
-        //用户点击的触发按钮
+        //是否显示取消按钮
         cancelDisplay: true,
 
         //定义目标点击按钮
