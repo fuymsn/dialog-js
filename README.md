@@ -12,3 +12,4 @@ jQuery
 * 2015-12-15 v0.1.4 update dialog fixed config & add autofix function.
 * 2016-06-21 v0.1.5 fix bug: dialog can not show the right top position, cause by changeable inner elements of 'content'.
 * 2017-04-25 v0.1.6 add **closeButtonDispaly** to config. now, you can config the display of close button.
+* 2017-06-28 v0.1.7 optimaze the display of cancel button.
