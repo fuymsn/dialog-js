@@ -133,6 +133,7 @@
 
         //是否显示取消按钮
         cancelDisplay: true,
+        cancelTextBtn: false,
 
         //定义目标点击按钮
         buttonTarget: null,
@@ -199,6 +200,7 @@
             if (this.options.ok) {
                 this.options.button.push({
                     id: 'ok',
+                    className: 'btn',
                     value: this.options.okValue,
                     callback: this.options.ok,
                     autofocus: true
@@ -209,9 +211,11 @@
             if (this.options.cancel) {
                 this.options.button.push({
                     id: 'cancel',
+                    className: 'btn btn-white',
                     value: this.options.cancelValue,
                     callback: this.options.cancel,
-                    display: this.options.cancelDisplay
+                    display: this.options.cancelDisplay,
+                    cancelTextBtn: this.options.cancelTextBtn
                 });
             }
 
@@ -328,6 +332,8 @@
 
                     var id = val.id = val.id || val.value;
                     var style = '';
+                    var btnClass = val.cancelTextBtn ? 'btn-leave' : val.className;
+
                     that.callbacks[id] = val.callback;
 
                     if (val.display === false) {
@@ -339,7 +345,7 @@
                     html +=
                         '<button'
                         + ' type="button"'
-                        + ' class="btn"'
+                        + ' class="' + btnClass + '"'
                         + ' i-id="' + id + '"'
                         + style
                         + (val.disabled ? ' disabled' : '')
